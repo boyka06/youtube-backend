@@ -43,9 +43,11 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
-userSchema.pre("save", async function (next) {
-  if (!this.password.isModified("password")) return next();
-  this.password =  await bcrypt.hash(this.password, 10);
+userSchema.pre("save", function (next) {
+  console.log("this.password:", this.password); // Check the value
+  if (!this.password) {
+    return next(new Error("Password is undefined"));
+  }
   next();
 });
 
